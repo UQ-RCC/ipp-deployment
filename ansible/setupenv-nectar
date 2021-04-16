@@ -1,0 +1,7 @@
+export SSH_KEY_NAME=calliope
+export STACK_NAME=ippprod
+export ANSIBLE_HOST_KEY_CHECKING=False
+export NODE_FLAVOUR=m3.large
+export VOUME_SIZE=40
+
+source /home/hoangnguyen177/Desktop/working/RCC/nectar/Nimrod_Portal-openrc.sh

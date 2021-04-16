@@ -1,0 +1,154 @@
+version: '3.5'
+
+services:
+  # ----------------------------------------------------------------------
+  # SINGLE ENTRYPOINT
+  # ----------------------------------------------------------------------
+  # webserver to handle all traffic. This can use let's encrypt to generate a SSL cert.
+  traefik:
+    image: traefik:1.7
+    command:
+      - --loglevel=INFO
+      - --api
+      # Entrypoints
+      - --defaultentrypoints=https,http
+      - --entryPoints=Name:http Address::80 ${TRAEFIK_HTTP_REDIRECT:-""}
+      - --entryPoints=Name:https Address::443 ${TRAEFIK_HTTPS_OPTIONS:-TLS}
+      # Configuration for acme (https://letsencrypt.org/)
+      - --acme=${TRAEFIK_ACME_ENABLE:-false}
+      #- --acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      # - --acme.email=${TRAEFIK_ACME_EMAIL:-""}
+      # - --acme.entrypoint=https
+      # - --acme.onhostrule=true
+      # - --acme.storage=/config/acme.json
+      # - --acme.httpchallenge.entrypoint=http
+      # - --acme.storage=/config/acme.json
+      # - --acme.acmelogging=true
+      # DOCKER
+      - --docker=true
+      - --docker.endpoint=unix:///var/run/docker.sock
+      - --docker.exposedbydefault=false
+      - --docker.watch=true
+    restart: unless-stopped
+    networks:
+      - ipp
+    ports:
+      - "${TRAEFIK_HTTP_PORT-8000}:80"
+      - "${TRAEFIK_HTTPS_PORT-8443}:443"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=traefik"
+      - "traefik.port=8080"
+      - "traefik.docker.network=ipp"
+      - "traefik.redirectorservice.frontend.entryPoints=http"
+      - "traefik.redirectorservice.frontend.redirect.entryPoint=https"
+      - "traefik.webservice.frontend.entryPoints=https"
+      - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefixStrip: /traefik"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik:/config
+
+          
+
+  # ----------------------------------------------------------------------
+  # Postgres DB
+  # ----------------------------------------------------------------------
+  database:
+    image: postgres:12.6
+    restart: unless-stopped
+    networks:
+      - ipp
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DBUSER:-test}
+      - POSTGRES_PASSWORD=${DBPASSWORD:-testpasssss}
+      - POSTGRES_DB=${POSTGRES_DB:-test}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      
+  # ----------------------------------------------------------------------
+  # IPP userinfo
+  # ----------------------------------------------------------------------
+  ippuserinfo:
+    image: uqrcc/ipp-userinfo:latest
+    restart: unless-stopped
+    networks:
+      - ipp
+    depends_on:
+      - database
+    command: ["uvicorn", "userinfo.main:userinfoapi", "--host", "0.0.0.0", "--port", "80", "--root-path", "/userinfo"]     
+    environment:
+      - SERVER_URL=${SERVER_URL}
+      - REALM_NAME=${REALM_NAME}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - AUTHORIZATION_URL=${AUTHORIZATION_URL}
+      - TOKEN_URL=${TOKEN_URL}
+      - PUBLIC_KEY=${PUBLIC_KEY}
+      - DB_TYPE=${DB_TYPE}
+      - DB_HOST=${DB_HOST}
+      - DBUSER=${DBUSER}
+      - DBPASSWORD=${DBPASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - EMAIL_UNAME=${EMAIL_UNAME}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=ippuserinfo"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefixStrip: /userinfo"
+      - "traefik.docker.network=ipp"
+      - "traefik.redirectorservice.frontend.entryPoints=http"
+      - "traefik.redirectorservice.frontend.redirect.entryPoint=https"
+      - "traefik.webservice.frontend.entryPoints=https"
+
+    volumes:
+      - ${PWD}/ippuserinfo.conf:/etc/ipp/userinfo/conf/ippuserinfo.conf
+      
+  # ----------------------------------------------------------------------
+  # ipp
+  # ----------------------------------------------------------------------
+  ipp:
+    image: uqrcc/ipp:latest
+    restart: unless-stopped
+    networks:
+      - ipp
+    depends_on:
+      - ippuserinfo
+    environment:
+      - SERVER_URL=${SERVER_URL}
+      - REALM_NAME=${REALM_NAME}
+      - CLIENT_ID=${JS_CLIENT_ID}
+      - KC_ONLOAD=${KC_ONLOAD}
+      - KC_MINVALIDITY=${KC_MINVALIDITY}
+      - PREF_ENDPOINT=${PREF_ENDPOINT}
+      - BACKEND_ENDPOINT=${BACKEND_ENDPOINT}
+      - SIGNOUT_URL=${HOST_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=ipp"
+      - "traefik.port=80"
+      - "traefik.docker.network=ipp"
+      - "traefik.redirectorservice.frontend.entryPoints=http"
+      - "traefik.redirectorservice.frontend.redirect.entryPoint=https"
+      - "traefik.webservice.frontend.entryPoints=https"
+      - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefix: /"
+    volumes:
+      - ${PWD}/config.json:/usr/share/nginx/html/config.json
+  
+# ----------------------------------------------------------------------
+# NETWORK FOR CONTAINER COMMUNICATION
+# ----------------------------------------------------------------------
+networks:
+  ipp:
+    external: true
+
+# ----------------------------------------------------------------------
+# VOLUMES FOR PERSISTENT STORAGE
+# ----------------------------------------------------------------------
+volumes:
+  traefik:
+  db-data:

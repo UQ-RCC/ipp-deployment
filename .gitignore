@@ -1,0 +1,8 @@
+ansible/heat.yaml
+ansible/inventory.yaml
+ansible/inventory-dev.yml
+ansible/inventory-test.yml
+ansible/inventory-prod.yml
+docker-compose/.env
+docker-compose/ippuserinfo.conf
+docker-compose/config.json

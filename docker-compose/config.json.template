@@ -1,0 +1,16 @@
+{
+  "production": {
+      "keycloak": {
+        "url": "${SERVER_URL}/auth",
+        "realm": "${REALM_NAME}",
+        "clientId": "${JS_CLIENT_ID}",
+        "onLoad": "${KC_ONLOAD}",
+        "minValidity": "${KC_MINVALIDITY}"
+      },
+      "endpoints": {
+        "pref": "${PREF_ENDPOINT}",
+        "wiener": "${BACKEND_ENDPOINT}"
+      },
+      "signoutUrl": "https://${HOST_NAME}/"
+  }
+}
