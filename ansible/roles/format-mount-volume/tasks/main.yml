@@ -35,3 +35,13 @@
   service: 
     name: autofs
     state: restarted
+
+- name: Creates database directory
+  file:
+    path: /mnt/db-data
+    state: directory
+
+- name: Creates traefil dir
+  file:
+    path: /mnt/traefik
+    state: directory

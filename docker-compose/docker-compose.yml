@@ -46,7 +46,7 @@ services:
       - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefixStrip: /traefik"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik:/config
+      - /mnt/traefik:/config
 
           
 
@@ -65,7 +65,7 @@ services:
       - POSTGRES_PASSWORD=${DBPASSWORD:-testpasssss}
       - POSTGRES_DB=${POSTGRES_DB:-test}
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /mnt/db-data:/var/lib/postgresql/data
       
   # ----------------------------------------------------------------------
   # IPP userinfo

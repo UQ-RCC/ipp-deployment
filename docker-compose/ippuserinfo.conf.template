@@ -21,4 +21,4 @@ smtp_server=${SMTP_SERVER}
 smtp_port=${SMTP_PORT}
 
 [client]
-uri=https://{HOST_NAME}/
+uri=https://${HOST_NAME}/
