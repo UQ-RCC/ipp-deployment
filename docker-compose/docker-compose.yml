@@ -127,6 +127,8 @@ services:
       - PREF_ENDPOINT=${PREF_ENDPOINT}
       - BACKEND_ENDPOINT=${BACKEND_ENDPOINT}
       - SIGNOUT_URL=${HOST_NAME}
+      - GUACD_HOSTNAME=${GUACD_HOSTNAME}
+      - GUACD_PORT=${GUACD_PORT}
     labels:
       - "traefik.enable=true"
       - "traefik.backend=ipp"
