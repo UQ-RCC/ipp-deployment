@@ -17,13 +17,13 @@ services:
       # Configuration for acme (https://letsencrypt.org/)
       - --acme=${TRAEFIK_ACME_ENABLE:-false}
       #- --acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-      # - --acme.email=${TRAEFIK_ACME_EMAIL:-""}
-      # - --acme.entrypoint=https
-      # - --acme.onhostrule=true
-      # - --acme.storage=/config/acme.json
-      # - --acme.httpchallenge.entrypoint=http
-      # - --acme.storage=/config/acme.json
-      # - --acme.acmelogging=true
+      - --acme.email=${TRAEFIK_ACME_EMAIL:-""}
+      - --acme.entrypoint=https
+      - --acme.onhostrule=true
+      - --acme.storage=/config/acme.json
+      - --acme.httpchallenge.entrypoint=http
+      - --acme.storage=/config/acme.json
+      - --acme.acmelogging=true
       # DOCKER
       - --docker=true
       - --docker.endpoint=unix:///var/run/docker.sock
