@@ -112,7 +112,7 @@ services:
   # ipp
   # ----------------------------------------------------------------------
   ipp:
-    image: uqrcc/ipp:latest
+    image: uqrcc/ipp:guacamole
     restart: unless-stopped
     networks:
       - ipp
