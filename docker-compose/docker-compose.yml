@@ -140,6 +140,8 @@ services:
       - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefix: /"
     volumes:
       - ${PWD}/config.json:/usr/share/nginx/html/config.json
+      - ${PWD}/guacamole.properties:/etc/guacamole/guacamole.properties
+      
   
 # ----------------------------------------------------------------------
 # NETWORK FOR CONTAINER COMMUNICATION
