@@ -71,7 +71,7 @@ services:
   # IPP userinfo
   # ----------------------------------------------------------------------
   ippuserinfo:
-    image: uqrcc/ipp-userinfo:latest
+    image: uqrcc/ipp-userinfo:2.0.0
     restart: unless-stopped
     networks:
       - ipp
@@ -112,7 +112,7 @@ services:
   # guacamole
   # ----------------------------------------------------------------------
   guacamole:
-    image: uqrcc/guacamole:latest
+    image: uqrcc/guacamole:2.0.1
     restart: unless-stopped
     networks:
       - ipp
@@ -134,7 +134,7 @@ services:
   # ipp
   # ----------------------------------------------------------------------
   ipp:
-    image: uqrcc/ipp:noguac
+    image: uqrcc/ipp:2.0.1
     restart: unless-stopped
     networks:
       - ipp
