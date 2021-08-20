@@ -11,7 +11,7 @@
         "pref": "${PREF_ENDPOINT}",
         "wiener": "${BACKEND_ENDPOINT}"
       },
-      "signoutUrl": "https://${HOST_NAME}/",
+      "signoutUrl": "https://${HOST_NAME}/homepage",
       "loginHost": "${LOGINHOST}"
   }
 }
