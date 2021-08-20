@@ -4,3 +4,6 @@
 Copy the files in docker-compose into the host you want to deploy IPP. 
 Run source .env (modify env.example)
 
+
+
+Maintenance: docker-compose -f docker-compose-maintenance.yml up -d
