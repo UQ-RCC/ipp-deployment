@@ -1,0 +1,24 @@
+---
+- name: install 
+  apt: 
+    name:
+      - python3-swiftclient
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: add backup
+  template:
+    src: backup.sh.j2
+    dest: "/usr/bin/ippbackup.sh"
+    owner: root
+    group: root
+    mode: 0755
+  
+- name: Backup 
+  cron:
+    name: "ippbackup"
+    weekday: "0"
+    minute: "0"
+    hour: "3"
+    job: "/usr/bin/ippbackup.sh"  

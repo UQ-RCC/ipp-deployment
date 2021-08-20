@@ -33,6 +33,9 @@ validate: ${HEAT_TEMPLATE}
 clean:
 	rm -f inventory.yml ${HEAT_TEMPLATE}
 
+backup: setupbackup.yml
+	ansible-playbook -i inventory.yml setupbackup.yml
+
 inventory.yml: ${HEAT_TEMPLATE} make_inventory_openstack.py
 	./make_inventory_openstack.py ${STACK_NAME} > $@
 

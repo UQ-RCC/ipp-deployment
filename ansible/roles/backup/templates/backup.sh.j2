@@ -1,0 +1,19 @@
+#!/bin/bash
+backupcontainer=ipp{{ setup }}
+echo $backupcontainer
+containers=$(/usr/bin/swift --os-auth-url {{ os_auth_url }} --auth-version {{ auth_version }} --os-username {{ os_username }} --os-password {{ os_password }} --os-project-id {{ os_project_id }} list)
+found=false
+for container in $containers; do
+    if [[ "$container" == "$backupcontainer" ]] ; then
+        found=true
+    fi
+done
+if [ "$found" = true ]; then
+    /usr/bin/swift --os-auth-url {{ os_auth_url }} --auth-version {{ auth_version }} --os-username {{ os_username }} --os-password {{ os_password }} --os-project-id {{ os_project_id }} post $backupcontainer
+fi
+
+###
+today=$(date '+%d-%m-%Y')
+tar cvfz "/tmp/db-data-${today}.tar.gz" /mnt/db-data/
+/usr/bin/swift --os-auth-url {{ os_auth_url }} --auth-version {{ auth_version }} --os-username {{ os_username }} --os-password {{ os_password }} --os-project-id {{ os_project_id }} upload $backupcontainer "/tmp/db-data-${today}.tar.gz" --object-name "db-data-${today}.tar.gz"
+rm "/tmp/db-data-${today}.tar.gz"
