@@ -44,11 +44,31 @@ services:
       - "traefik.redirectorservice.frontend.redirect.entryPoint=https"
       - "traefik.webservice.frontend.entryPoints=https"
       - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefixStrip: /traefik"
+      - "traefik.frontend.auth.basic.users=${TRAEFIK_USER:-}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /mnt/traefik:/config
 
-          
+
+  # ----------------------------------------------------------------------
+  # homepage
+  # ----------------------------------------------------------------------
+  homepage:
+    image: uqrcc/ipp-homepage:latest
+    restart: unless-stopped
+    networks:
+      - ipp
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=ipp"
+      - "traefik.port=80"
+      - "traefik.docker.network=ipp"
+      - "traefik.redirectorservice.frontend.entryPoints=http"
+      - "traefik.redirectorservice.frontend.redirect.entryPoint=https"
+      - "traefik.webservice.frontend.entryPoints=https"
+      - "traefik.frontend.rule=Host:${HOST_NAME:-};PathPrefix: /homepage"          
 
   # ----------------------------------------------------------------------
   # Postgres DB
