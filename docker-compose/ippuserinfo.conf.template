@@ -23,3 +23,21 @@ admins=${ADMIN_EMAILS}
 
 [client]
 uri=https://${HOST_NAME}/
+
+[github]
+enabled=${GITHUB_ENABLED}
+github_user=${GITHUB_USER}
+github_token=${GITHUB_TOKEN}
+repo_owner=${REPO_OWNER}
+repo_name=${REPO_NAME}
+# using openstack objectstore to store images
+swift_username=${SWIFT_USERNAME}
+swift_password=${SWIFT_PASSWORD}
+swift_auth_v=${SWIFT_AUTH_V}
+swift_auth_url=${SWIFT_AUTH_URL}
+swift_user_domain_name=${SWIFT_USER_DOMAIN_NAME}
+swift_project_domain_id=${SWIFT_PROJECT_DOMAIN_ID}
+swift_project_name=${SWIFT_PROJECT_NAME}
+# make sure set the container public
+swift_public_url=${SWIFT_CONTAINER_PUBLIC_URL}
+swift_container=${SWIFT_CONTAINER}
