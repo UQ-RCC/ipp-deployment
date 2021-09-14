@@ -17,7 +17,7 @@ server {
             add_header					'Content-Length'					0;
             return 204;
         }
-        set								$upstream							https://${BACK_END_HOST}/${RESOURCE_SERVER_PATH};
+        set								$upstream							'${BACKEND_ENDPOINT}';
         proxy_pass						$upstream;
         proxy_set_header				Host								$host;
         proxy_set_header				X-Real-IP							$remote_addr;
