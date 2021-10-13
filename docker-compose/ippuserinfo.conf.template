@@ -22,7 +22,7 @@ smtp_port=${SMTP_PORT}
 admins=${ADMIN_EMAILS}
 
 [client]
-uri=https://${HOST_NAME}/
+uri=https://${HOST_NAME}/portal/
 
 [github]
 enabled=${GITHUB_ENABLED}
