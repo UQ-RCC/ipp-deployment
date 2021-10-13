@@ -154,7 +154,7 @@ services:
   # ipp
   # ----------------------------------------------------------------------
   ipp:
-    image: uqrcc/ipp:2.1.12
+    image: uqrcc/ipp:2.1.13
     restart: unless-stopped
     networks:
       - ipp
