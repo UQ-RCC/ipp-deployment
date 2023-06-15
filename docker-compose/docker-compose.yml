@@ -184,7 +184,7 @@ services:
       
 
   # ----------------------------------------------------------------------
-  # wwi
+  # provides browser javascript to access wwi resource server api
   # ----------------------------------------------------------------------
   resourceserver:
     image: nginx:1.21.3
